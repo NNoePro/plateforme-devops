@@ -9,3 +9,8 @@ variable "version_argocd" {
   type        = string
   default     = "10.10.3"
 }
+
+variable "depot" {
+  description = "URL HTTPS du dépôt GitOps"
+  type        = string
+}

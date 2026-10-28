@@ -11,6 +11,7 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+infra/plateforme-config
 
 # Secrets et variables d'environnement
 .env

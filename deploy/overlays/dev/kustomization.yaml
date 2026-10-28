@@ -9,4 +9,4 @@ resources:
 images:
 - name: api
   newName: ghcr.io/nnoepro/plateforme-devops
-  newTag: 9f31038b
+  newTag: a11b0614

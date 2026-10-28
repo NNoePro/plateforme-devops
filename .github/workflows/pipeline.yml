@@ -1,0 +1,71 @@
+name: Pipeline CI/CD
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "app/**"
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-publish-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configurer Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Se connecter à GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Définir le nom et le tag de l'image
+        id: image
+        shell: bash
+        run: |
+          COMPTE="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
+          DEPOT="$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')"
+          TAG="$(echo '${{ github.sha }}' | cut -c1-8)"
+          echo "name=ghcr.io/${COMPTE}/${DEPOT}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Construire et publier l'image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./app
+          push: true
+          tags: ${{ steps.image.outputs.name }}:${{ steps.image.outputs.tag }}
+
+      - name: Installer Kustomize
+        uses: imranismail/setup-kustomize@v2
+
+      - name: Mettre à jour l'image de développement
+        shell: bash
+        run: |
+          cd deploy/overlays/dev
+          kustomize edit set image api=${{ steps.image.outputs.name }}:${{ steps.image.outputs.tag }}
+
+      - name: Commiter et pousser le tag
+        shell: bash
+        run: |
+          git config user.name "pipeline-ci"
+          git config user.email "pipeline-ci@users.noreply.github.com"
+          git add deploy/overlays/dev/kustomization.yaml
+          if git diff --cached --quiet; then
+            echo "Le tag est déjà à jour."
+            exit 0
+          fi
+          git commit -m "ci: déployer ${GITHUB_SHA::8} en dev"
+          git push origin HEAD:main

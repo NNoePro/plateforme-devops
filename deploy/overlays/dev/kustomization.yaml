@@ -4,8 +4,9 @@ kind: Kustomization
 namespace: dev
 
 resources:
-  - ../../base
+- ../../base
 
 images:
-  - name: api
-    newTag: initial
+- name: api
+  newName: ghcr.io/nnoepro/plateforme-devops
+  newTag: 9f31038b

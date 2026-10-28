@@ -8,7 +8,8 @@ resources:
 
 images:
   - name: api
-    newTag: initial
+    newName: ghcr.io/nnoepro/plateforme-devops
+    newTag: a11b0614
 
 replicas:
   - name: api

@@ -36,8 +36,8 @@ def creer_app():
         time.sleep(chaos["latence_ms"] / 1000)
         if random.random() < chaos["erreurs"]:
             return jsonify(erreur="panne simulée"), 500
-        return jsonify(service="api", version=os.environ.get("VERSION", "dev"),
-                       jeton_present=bool(os.environ.get("JETON")))
+        return jsonify(service="api-tp3", version=os.environ.get("VERSION", "dev"),
+               jeton_present=bool(os.environ.get("JETON")))
 
     @app.get("/healthz")
     def healthz():

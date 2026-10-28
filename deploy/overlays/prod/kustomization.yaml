@@ -12,4 +12,4 @@ images:
 
 replicas:
   - name: api
-    count: 3
+    count: 2

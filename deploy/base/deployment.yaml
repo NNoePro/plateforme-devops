@@ -21,6 +21,10 @@ spec:
           ports:
             - name: http
               containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: api-secret
+                optional: true
           readinessProbe:
             httpGet:
               path: /healthz

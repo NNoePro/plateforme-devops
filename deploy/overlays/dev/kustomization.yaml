@@ -4,9 +4,10 @@ kind: Kustomization
 namespace: dev
 
 resources:
-- ../../base
+  - ../../base
+  - api-secret-scelle.yaml
 
 images:
-- name: api
-  newName: ghcr.io/nnoepro/plateforme-devops
-  newTag: a11b0614
+  - name: api
+    newName: ghcr.io/nnoepro/plateforme-devops
+    newTag: a11b0614

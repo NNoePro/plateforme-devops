@@ -6,7 +6,7 @@
 crash.log
 crash.*.log
 *.tfvars
-!plateforme.tfvars.example
+!infra/plateforme.tfvars
 override.tf
 override.tf.json
 *_override.tf
